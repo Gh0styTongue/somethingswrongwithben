@@ -10,7 +10,6 @@ export default function SharePage() {
 
   useEffect(() => {
     if (name) {
-      // Redirect to home with the name in a query parameter
       router.push(`/?name=${encodeURIComponent(name)}&auto=true`);
     } else {
       router.push("/");
@@ -18,7 +17,7 @@ export default function SharePage() {
   }, [name, router]);
 
   return (
-    <div className="app" style={{ display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
+    <div className="app" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p className="status-text active">LOADING SHARED MESSAGE...</p>
     </div>
   );
