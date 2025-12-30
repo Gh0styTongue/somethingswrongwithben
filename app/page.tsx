@@ -10,8 +10,7 @@ export default function Home() {
   const [backendError, setBackendError] = useState(false);
   const [showBlacklist, setShowBlacklist] = useState(false);
 
-  // Complete blacklist from source
-  const ga = ["5S","affanculo","arrapato","arrapate","arrapata","ass","assfuck","asshole","assholes","bagasce","bagascia","bagascie","bastard","bastarda","bastarde","bastardi","bastardo","belin","belinone","bestiality","bimbominkia","bitc","bitch","bitches","bitchin","bitching","blowjob","blowjobs","bocchinari","bocchinaro","bocchino","boiata","bruciaculo","bucchinaro","bucchini","bucchino","cacare","cacata","cacataa","cacate","cacca","cafonata","caga","cagare","cagat","cagata","cagate","cagati","cagatone","cagna","cagne","cagnetta","cagnette","cago","cagona","cagone","cagoni","cagosa","cagoso","cagosi","cam","cancerogene","cancerogeno","casapound","casa pound","cum","cumshot","cane","cazzata","cazzate","cazzi","cazzimma","cazo","cazzo","cazzooo","cazzone","cazzoni","cazzoso","cessa","cesse","cessi","cesso","checazz","checazzo","chiavare","chiavata","chiavica","cineblog","cb01","cinquestelle","pedofilo","pedofilia","pentastellati","grillino","grillini","clitoride","cock","cocksuck","cocksucker","codio","cogliona","coglionata","coglionate","coglione","coglioni","comunismo","comunista","cracker","crap","cretina","cretinata","cretinate","cretine","cretini","cretino","culi","culo","cummer","cumming","cums","cunilingus","cunillingus","cunnilingus","cunt","cunts","cyberfuc","cyberfuck","cyberfucker","cyberfucking","cybersex","deficiente","deficente","deficienti","deficenti","demente","dildo","diocane","diomerda","dioladro","diobastardo","dioporco","download","dimaio","di maio","ditoinculo","ditoarculo","ditoalculo","dito in culo","dito al culo","cancro","cancri","satanist","satanista","ritardati","porcoiddio","schifo","degrado","tumore","fanculo","fanculizzati","fart","fava","felatio","fellatio","fessa","fica","fiche","figa","figli","figlio","finocchi","finocchio","fistfucker","foibe","fottere","fottiti","fottutissima","fregna","frocetto","froci","frocino","frocio","fuck","fucker","fucktwat","fuckwit","fuk","fuks","gangbang","gang bang","gangbanged","gangbangs","gay","gaysex","gloryhole","goddamn","gulag","hardcoresex","honky","horniest","horny","idiota","idioti","imbecille","imbecilli","incaxato","incaxxata","incaxxato","incaxxo","incazzata","incazzato","incazzo","inculata","inculato","inculare","inkaxxa","inkaxxata","inkaxxato","inkaxxo","jackass","jerkoff","jihad","kissass","kock","leccaculo","lecchini","lercio","lesbica","lesbicona","link","madonna troia","maiala","maialate","mannaggiallamadonna","mannaggia alla madonna","maricon","marikon","masturbare","masturbarsi","masturbati","merda","mmerda","merdaccia","merdata","merdate","merde","merdina","merdosa","merdose","merdosi","merdoso","mignotta","minchia","minchiata","minchiate","minchie","minchione","mongolo","mongoloide","morirai","morirete","mortacci","muore","morto","motherfucker","muori","muoiono","nigger","niggers","negra","negri","negro","negrone","nowvideo","occristo","openload","orgasm","orgasms","palestina","palestinesi","palestinese","palle","parolacce","parolaccia","penis","pezzi di merda","pezzo di merda","pezzodimerda","pisciare","piss","pompinara","pompini","pompino","ponpino","ponpini","ponpinara","porca","porcate","porcata","porcatroia","porcellina","porche","porci","porco","porcodidio","porcoddio","porcordio","porcoiddio","porcodio","porka","porn","porno","pornography","pornos","pucchiacca","pussies","pussy","puta","puttana","porca madonna","puttanat","puttanamadonna","puttanata","puttane","puttanone","rabbino","raspone","renzi","ricchione","ritardata","ritardato","rompicoglioni","rompipalle","rottoinculo","salvini","sborare","sborra","sborrare","sborro","schifezza","schifosa","schifoso","scopare","scroto","scopata","sega","segaioli","segaiolo","seghe","sex","shit","skif","skifo","slut","sluts","sbura","sburo","siffredi","smerdare","sorca","spaz","spazzatura","sperma","sticazzi","sticchio","stocazzo","stracazzo","stronza","stronzata","stronzate","stronze","stronzi","stronzo","stronzone","sucalo","sucamelo","succhia","succhiacazzi","succhialo","supersborrata","supersborrate","terrone","tette","troia","troiata","troie","troione","troioni","vaffanculo","vagina","vomitare","vomito","webcam","whale","whore","wtf","vergogna","vergognoso","zoccola","zoccolacce","zoccoletta","zoccole","zoccolone","putin","ucraina","ukraine","biden","hamas","israele","israel","aborto","tordo","ciofeca","patacca","filmaccio","troiaio","vaffa","cristo","scemo","bimbiminkia","sputtanare","boiate","Paramount","Skydance","Primate","Primate Movie","David Ellison","PSKY"];
+  const ga = ["5S","affanculo","arrapato","arrapate","arrapata","ass","assfuck","asshole","assholes","bagasce","bagascia","bagascie","bastard","bastarda","bastarde","bastardi","bastardo","belin","belinone","bestiality","bimbominkia","bitc","bitch","bitches","bitc" + "hin","bitching","blowjob","blowjobs","bocchinari","bocchinaro","bocchino","boiata","bruciaculo","bucchinaro","bucchini","bucchino","cacare","cacata","cacataa","cacate","cacca","cafonata","caga","cagare","cagat","cagata","cagate","cagati","cagatone","cagna","cagne","cagnetta","cagnette","cago","cagona","cagone","cagoni","cagosa","cagoso","cagosi","cam","cancerogene","cancerogeno","casapound","casa pound","cum","cumshot","cane","cazzata","cazzate","cazzi","cazzimma","cazo","cazzo","cazzooo","cazzone","cazzoni","cazzoso","cessa","cesse","cessi","cesso","checazz","checazzo","chiavare","chiavata","chiavica","cineblog","cb01","cinquestelle","pedofilo","pedofilia","pentastellati","grillino","grillini","clitoride","cock","cocksuck","cocksucker","codio","cogliona","coglionata","coglionate","coglione","coglioni","comunismo","comunista","cracker","crap","cretina","cretinata","cretinate","cretine","cretini","cretino","culi","culo","cummer","cumming","cums","cunilingus","cunillingus","cunnilingus","cunt","cunts","cyberfuc","cyberfuck","cyberfucker","cyberfucking","cybersex","deficiente","deficente","deficienti","deficenti","demente","dildo","diocane","diomerda","dioladro","diobastardo","dioporco","download","dimaio","di maio","ditoinculo","ditoarculo","ditoalculo","dito in culo","dito al culo","cancro","cancri","satanist","satanista","ritardati","porcoiddio","schifo","degrado","tumore","fanculo","fanculizzati","fart","fava","felatio","fellatio","fessa","fica","fiche","figa","figli","figlio","finocchi","finocchio","fistfucker","foibe","fottere","fottiti","fottutissima","fregna","frocetto","froci","frocino","frocio","fuck","fucker","fucktwat","fuckwit","fuk","fuks","gangbang","gang bang","gangbanged","gangbangs","gay","gaysex","gloryhole","goddamn","gulag","hardcoresex","honky","horniest","horny","idiota","idioti","imbecille","imbecilli","incaxato","incaxxata","incaxxato","incaxxo","incazzata","incazzato","incazzo","inculata","inculato","inculare","inkaxxa","inkaxxata","inkaxxato","inkaxxo","jackass","jerkoff","jihad","kissass","kock","leccaculo","lecchini","lercio","lesbica","lesbicona","link","madonna troia","maiala","maialate","mannaggiallamadonna","mannaggia alla madonna","maricon","marikon","masturbare","masturbarsi","masturbati","merda","mmerda","merdaccia","merdata","merdate","merde","merdina","merdosa","merdose","merdosi","merdoso","mignotta","minchia","minchiata","minchiate","minchie","minchione","mongolo","mongoloide","morirai","morirete","mortacci","muore","morto","motherfucker","muori","muoiono","nigger","niggers","negra","negri","negro","negrone","nowvideo","occristo","openload","orgasm","orgasms","palestina","palestinesi","palestinese","palle","parolacce","parolaccia","penis","pezzi di merda","pezzo di merda","pezzodimerda","pisciare","piss","pompinara","pompini","pompino","ponpino","ponpini","ponpinara","porca","porcate","porcata","porcatroia","porcellina","porche","porci","porco","porcodidio","porcoddio","porcordio","porcoiddio","porcodio","porka","porn","porno","pornography","pornos","pucchiacca","pussies","pussy","puta","puttana","porca madonna","puttanat","puttanamadonna","puttanata","puttane","puttanone","rabbino","raspone","renzi","ricchione","ritardata","ritardato","rompicoglioni","rompipalle","rottoinculo","salvini","sborare","sborra","sborrare","sborro","schifezza","schifosa","schifoso","scopare","scroto","scopata","sega","segaioli","segaiolo","seghe","sex","shit","skif","skifo","slut","sluts","sbura","sburo","siffredi","smerdare","sorca","spaz","spazzatura","sperma","sticazzi","sticchio","stocazzo","stracazzo","stronza","stronzata","stronzate","stronze","stronzi","stronzo","stronzone","sucalo","sucamelo","succhia","succhiacazzi","succhialo","supersborrata","supersborrate","terrone","tette","troia","troiata","troie","troione","troioni","vaffanculo","vagina","vomitare","vomito","webcam","whale","whore","wtf","vergogna","vergognoso","zoccola","zoccolacce","zoccoletta","zoccole","zoccolone","putin","ucraina","ukraine","biden","hamas","israele","israel","aborto","tordo","ciofeca","patacca","filmaccio","troiaio","vaffa","cristo","scemo","bimbiminkia","sputtanare","boiate","Paramount","Skydance","Primate","Primate Movie","David Ellison","PSKY"];
 
   const categories = {
     political: ["putin", "ucraina", "ukraine", "biden", "hamas", "israele", "israel", "salvini", "comunista", "comunismo"],
@@ -21,7 +20,7 @@ export default function Home() {
 
   const pollJob = async (jobId: string, initialData: any) => {
     let attempts = 0;
-    while (attempts < 40) { // Polling logic from source
+    while (attempts < 40) {
       const res = await fetch(`/api/getJob/${jobId}`);
       const data = await res.json();
       if (data.status === "complete") {
@@ -40,24 +39,20 @@ export default function Home() {
     setStep('loading');
     setBackendError(false);
     setProgress(10);
-    
     try {
       const res = await fetch(`/api/create/${encodeURIComponent(name)}`, { method: 'POST' });
       const data = await res.json();
-      
       if (data.error && data.error.includes("inappropriate")) {
         setBackendError(true);
         setStep('home');
         return;
       }
-      
       let finalData;
       if (data.cached) {
         finalData = data;
       } else {
-        finalData = await pollJob(data.jobId, data); // Fixed: Poll and merge initial URLs
+        finalData = await pollJob(data.jobId, data);
       }
-      
       setVideoData(finalData);
       setProgress(100);
       setTimeout(() => setStep('player'), 1000);
@@ -95,6 +90,7 @@ export default function Home() {
                     onChange={(e) => setName(e.target.value)} 
                     placeholder="ENTER NAME" 
                     className="name-input"
+                    maxLength={15}
                   />
                   <div className="input-line"></div>
                 </div>
@@ -195,6 +191,10 @@ export default function Home() {
                 </button>
               </div>
               <div className="action-links">
+                <button className="action-link" onClick={() => window.open(`https://${videoData.url}`)}>
+                   <img src="/images/btn_download.png" className="action-icon" alt="" />
+                   <span>DOWNLOAD VIDEO</span>
+                </button>
                 <button className="action-link" onClick={() => setStep('home')}>
                    <img src="/images/btn_reset.png" className="action-icon" alt="" />
                    <span>RESTART</span>
