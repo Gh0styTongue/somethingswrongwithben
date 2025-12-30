@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function Home() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<'home' | 'loading' | 'player'>('home');
   const [name, setName] = useState("");
   const [progress, setProgress] = useState(0);
+  const [isNewWord, setIsNewWord] = useState(false);
   const [videoData, setVideoData] = useState<any>(null);
   const [backendError, setBackendError] = useState(false);
   const [showBlacklist, setShowBlacklist] = useState(false);
@@ -20,6 +23,7 @@ export default function Home() {
 
   const pollJob = async (jobId: string, initialData: any) => {
     let attempts = 0;
+    setIsNewWord(true);
     while (attempts < 40) {
       const res = await fetch(`/api/getJob/${jobId}`);
       const data = await res.json();
@@ -32,13 +36,15 @@ export default function Home() {
     throw new Error("Timeout");
   };
 
-  const startGeneration = async () => {
-    if (!name.trim()) return;
+  const startGeneration = async (sharedName?: string) => {
+    const targetName = sharedName || name;
+    if (!targetName.trim()) return;
     setStep('loading');
     setBackendError(false);
+    setIsNewWord(false);
     setProgress(10);
     try {
-      const res = await fetch(`/api/create/${encodeURIComponent(name)}`, { method: 'POST' });
+      const res = await fetch(`/api/create/${encodeURIComponent(targetName)}`, { method: 'POST' });
       const data = await res.json();
       if (data.error && data.error.includes("inappropriate")) {
         setBackendError(true);
@@ -58,6 +64,15 @@ export default function Home() {
       setStep('home');
     }
   };
+
+  useEffect(() => {
+    const sharedName = searchParams.get('name');
+    const autoTrigger = searchParams.get('auto');
+    if (sharedName && autoTrigger === 'true') {
+      setName(sharedName);
+      startGeneration(sharedName);
+    }
+  }, [searchParams]);
 
   return (
     <div className={`app ${backendError || showBlacklist ? 'popup-active' : ''}`}>
@@ -83,22 +98,14 @@ export default function Home() {
               </div>
               <div className="input-section">
                 <div className="input-wrapper">
-                  <input 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
-                    placeholder="ENTER NAME" 
-                    className="name-input"
-                    maxLength={15}
-                  />
+                  <input value={name} onChange={(e) => setName(e.target.value)} placeholder="ENTER NAME" className="name-input" maxLength={15} />
                   <div className="input-line"></div>
                 </div>
-                <button className="proceed-btn" onClick={startGeneration}>
+                <button className="proceed-btn" onClick={() => startGeneration()}>
                   <span>GO</span>
                   <img src="/images/btn_arrows.png" alt="" className="proceed-icon" />
                 </button>
-                <button className="view-blacklist-btn" onClick={() => setShowBlacklist(true)}>
-                  VIEW PARAMOUNT BLACKLIST
-                </button>
+                <button className="view-blacklist-btn" onClick={() => setShowBlacklist(true)}>VIEW PARAMOUNT BLACKLIST</button>
               </div>
             </div>
           </main>
@@ -111,11 +118,9 @@ export default function Home() {
             <button className="close-btn" onClick={() => setBackendError(false)}>X</button>
             <h2 className="highlight">INAPPROPRIATE CONTENT</h2>
             <p className="error-desc">
-              This name or word has been flagged by Paramount. We don't have a blacklist or any filters on our side-the only people who do are Paramount. This word is blocked deep within their backend systems and there is absolutely nothing we can do to bypass it.
+              Vocal frequency restricted. This entry has been flagged by Paramount’s central security protocols. We do not maintain any local filters the restriction is embedded within their proprietary backend systems. This signal cannot be overridden or bypassed from our terminal.
             </p>
-            <button className="action-link" onClick={() => setBackendError(false)}>
-              <span>TRY AGAIN</span>
-            </button>
+            <button className="action-link" onClick={() => setBackendError(false)}>TRY AGAIN</button>
           </div>
         </div>
       )}
@@ -126,7 +131,7 @@ export default function Home() {
             <button className="close-btn" onClick={() => setShowBlacklist(false)}>X</button>
             <h3 className="modal-title">PARAMOUNT BLACKLIST</h3>
             <p className="modal-hint">
-              It's actually interesting to see what Paramount chooses to block versus what they allow. If your name is blocked, try adding a <strong>-</strong> or an extra silent letter to bypass their backend filter.
+              It is interesting to observe which patterns the Paramount protocols flag and which they permit. If your identification is rejected, consider inserting a <strong>-</strong> or an additional silent character to bypass their backend constraints.
             </p>
             <div className="blacklist-scroll">
               <div className="category">
@@ -152,6 +157,7 @@ export default function Home() {
             <img src="/images/primate_loading.gif" alt="" className="loading-gif" />
             <div className="loading-text">
               <p className={`status-text ${progress >= 10 ? 'active' : ''}`}>Analyzing Ben's behavior pattern...</p>
+              {isNewWord && <p className="new-word-hint active">New entry detected. Syncing with Ben’s database...</p>}
               <p className={`status-text ${progress >= 60 ? 'active' : ''}`}>Processing voice and gestures...</p>
             </div>
           </div>
@@ -186,6 +192,14 @@ export default function Home() {
                 </button>
               </div>
               <div className="action-links">
+                <button className="action-link" onClick={() => {
+                  const shareUrl = `${window.location.origin}/share/${encodeURIComponent(name)}`;
+                  navigator.clipboard.writeText(shareUrl);
+                  alert("Link copied!");
+                }}>
+                  <img src="/images/btn_arrows.png" className="action-icon" style={{ transform: 'rotate(-45deg)' }} />
+                  <span>SHARE LINK</span>
+                </button>
                 <button className="action-link" onClick={() => window.open(`https://${videoData.url}`)}>
                    <img src="/images/btn_download.png" className="action-icon" />
                    <span>DOWNLOAD VIDEO</span>
