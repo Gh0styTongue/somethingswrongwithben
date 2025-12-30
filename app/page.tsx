@@ -131,7 +131,7 @@ function HomeContent() {
             <button className="close-btn" onClick={() => setShowBlacklist(false)}>X</button>
             <h3 className="modal-title">PARAMOUNT BLACKLIST</h3>
             <p className="modal-hint">
-              It is interesting to observe which patterns the Paramount protocols flag and which they permit. If your identification is rejected, consider inserting a <strong>-</strong> or an additional silent character to bypass their backend constraints.
+              It is interesting to observe which patterns the Paramount protocols flag and which they permit. If your identification is rejected, consider inserting a <strong>Dash</strong> or an additional silent character to bypass their backend constraints.
             </p>
             <div className="blacklist-scroll">
               <div className="category">
