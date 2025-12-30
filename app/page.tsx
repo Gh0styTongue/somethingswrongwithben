@@ -7,9 +7,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [progress, setProgress] = useState(0);
   const [videoData, setVideoData] = useState<any>(null);
-  const [error, setError] = useState(false);
 
-  // Exact strings from the source code
   const strings = {
     home: {
       messageLine1: "Something's",
@@ -19,56 +17,31 @@ export default function Home() {
       messageLine3: "help him communicate:",
       inputPlaceholder: "ENTER NAME"
     },
-    header: {
-      theatresLabel: "ONLY IN THEATRES",
-      releaseDate: "JANUARY 9"
-    },
-    loading: {
-      step1: "Analyzing Ben's behavior pattern...",
-      step2: "Processing voice and gestures..."
-    },
-    common: { go: "GO" },
-    errors: { profanity: "Try another name." }
-  };
-
-  const pollJob = async (jobId: string) => {
-    let attempts = 0;
-    while (attempts < 40) {
-      const res = await fetch(`/api/getJob/${jobId}`);
-      const data = await res.json();
-      if (data.status === "complete") return data;
-      if (data.status === "error") throw new Error(data.error);
-      await new Promise(r => setTimeout(r, 750));
-      attempts++;
-      setProgress(prev => Math.min(prev + 2, 99));
-    }
-    throw new Error("Timeout");
+    header: { theatresLabel: "ONLY IN THEATRES", releaseDate: "JANUARY 9" },
+    loading: { step1: "Analyzing Ben's behavior pattern...", step2: "Processing voice and gestures..." },
+    common: { go: "GO" }
   };
 
   const startGeneration = async () => {
     if (!name.trim()) return;
     setStep('loading');
     setProgress(10);
+    
     try {
+      // Direct call to your new proxy that returns the full response
       const res = await fetch(`/api/create/${encodeURIComponent(name)}`, { method: 'POST' });
       const data = await res.json();
-      if (data.cached) {
-        setVideoData(data);
-      } else {
-        const result = await pollJob(data.jobId);
-        setVideoData({ ...result, ...data });
-      }
+      
+      setVideoData(data);
       setProgress(100);
       setTimeout(() => setStep('player'), 500);
     } catch (e) {
-      setError(true);
       setStep('home');
     }
   };
 
   return (
     <div className="app">
-      {/* 1:1 Header Branding */}
       <header className="header">
         <div className="header-content">
           <img src="/images/TT.png" alt="PRIMATE" className="logo" />
@@ -96,12 +69,11 @@ export default function Home() {
                 <div className="input-wrapper">
                   <input 
                     value={name} 
-                    onChange={(e) => {setName(e.target.value); setError(false);}} 
+                    onChange={(e) => setName(e.target.value)} 
                     placeholder={strings.home.inputPlaceholder} 
                     className="name-input"
                     maxLength={15}
                   />
-                  {error && <p className="profanity-error">{strings.errors.profanity}</p>}
                 </div>
                 <button className="proceed-btn" onClick={startGeneration}>
                   <span>{strings.common.go}</span>
@@ -145,7 +117,10 @@ export default function Home() {
                     </div>
                   </button>
                 </div>
-                <button className="action-link" onClick={() => setStep('home')}>RESTART</button>
+                <button className="action-link restart-btn" onClick={() => setStep('home')}>
+                   <img src="/images/btn_reset.png" alt="" className="action-icon" />
+                   <span>RESTART</span>
+                </button>
               </div>
             </div>
           </div>
