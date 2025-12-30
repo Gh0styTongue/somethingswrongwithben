@@ -111,9 +111,7 @@ export default function Home() {
             <button className="close-btn" onClick={() => setBackendError(false)}>X</button>
             <h2 className="highlight">INAPPROPRIATE CONTENT</h2>
             <p className="error-desc">
-              This isn't a blacklisted word from us—we don't have any filters on our side. 
-              The only people who do are Paramount. This word is blocked by their backend systems 
-              and there is nothing we can do to bypass it on our end.
+              This name or word has been flagged by Paramount. We don't have a blacklist or any filters on our side-the only people who do are Paramount. This word is blocked deep within their backend systems and there is absolutely nothing we can do to bypass it.
             </p>
             <button className="action-link" onClick={() => setBackendError(false)}>
               <span>TRY AGAIN</span>
@@ -128,8 +126,7 @@ export default function Home() {
             <button className="close-btn" onClick={() => setShowBlacklist(false)}>X</button>
             <h3 className="modal-title">PARAMOUNT BLACKLIST</h3>
             <p className="modal-hint">
-              It is interesting to see what Paramount chooses to block and what they don't. 
-              If your name is blocked, try adding a <strong>-</strong> or an extra silent letter to bypass their filter.
+              It's actually interesting to see what Paramount chooses to block versus what they allow. If your name is blocked, try adding a <strong>-</strong> or an extra silent letter to bypass their backend filter.
             </p>
             <div className="blacklist-scroll">
               <div className="category">
@@ -190,12 +187,12 @@ export default function Home() {
               </div>
               <div className="action-links">
                 <button className="action-link" onClick={() => window.open(`https://${videoData.url}`)}>
-                  <img src="/images/btn_download.png" className="action-icon" />
-                  <span>DOWNLOAD VIDEO</span>
+                   <img src="/images/btn_download.png" className="action-icon" />
+                   <span>DOWNLOAD VIDEO</span>
                 </button>
                 <button className="action-link" onClick={() => setStep('home')}>
-                  <img src="/images/btn_reset.png" className="action-icon" />
-                  <span>RESTART</span>
+                   <img src="/images/btn_reset.png" className="action-icon" />
+                   <span>RESTART</span>
                 </button>
               </div>
             </div>
