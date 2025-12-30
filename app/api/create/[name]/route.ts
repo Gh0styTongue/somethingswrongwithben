@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
-  request: Request,
-  { params }: { params: { name: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ name: string }> } // Change to Promise
 ) {
-  const name = params.name;
+  const { name } = await params; // Await the params here
   const API_BASE = "https://d3ed3fpdxc3p43.cloudfront.net";
-  const SECRET = "Sl5xxH8p7aehURuzxJzylQ8gDmHT5dWL"; // Extracted from source
+  const SECRET = "Sl5xxH8p7aehURuzxJzylQ8gDmHT5dWL";
 
   try {
     const response = await fetch(`${API_BASE}/api/composite`, {
@@ -15,7 +15,7 @@ export async function POST(
         "Content-Type": "application/json",
         "x-client-secret": SECRET,
       },
-      body: JSON.stringify({ Name: name, locale: "en" }), // locale "en" from source
+      body: JSON.stringify({ Name: name, locale: "en" }),
     });
 
     const data = await response.json();
