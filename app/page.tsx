@@ -10,7 +10,7 @@ export default function Home() {
   const [backendError, setBackendError] = useState(false);
   const [showBlacklist, setShowBlacklist] = useState(false);
 
-  // Exact profanity list from source
+  // Complete blacklist from source
   const ga = ["5S","affanculo","arrapato","arrapate","arrapata","ass","assfuck","asshole","assholes","bagasce","bagascia","bagascie","bastard","bastarda","bastarde","bastardi","bastardo","belin","belinone","bestiality","bimbominkia","bitc","bitch","bitches","bitchin","bitching","blowjob","blowjobs","bocchinari","bocchinaro","bocchino","boiata","bruciaculo","bucchinaro","bucchini","bucchino","cacare","cacata","cacataa","cacate","cacca","cafonata","caga","cagare","cagat","cagata","cagate","cagati","cagatone","cagna","cagne","cagnetta","cagnette","cago","cagona","cagone","cagoni","cagosa","cagoso","cagosi","cam","cancerogene","cancerogeno","casapound","casa pound","cum","cumshot","cane","cazzata","cazzate","cazzi","cazzimma","cazo","cazzo","cazzooo","cazzone","cazzoni","cazzoso","cessa","cesse","cessi","cesso","checazz","checazzo","chiavare","chiavata","chiavica","cineblog","cb01","cinquestelle","pedofilo","pedofilia","pentastellati","grillino","grillini","clitoride","cock","cocksuck","cocksucker","codio","cogliona","coglionata","coglionate","coglione","coglioni","comunismo","comunista","cracker","crap","cretina","cretinata","cretinate","cretine","cretini","cretino","culi","culo","cummer","cumming","cums","cunilingus","cunillingus","cunnilingus","cunt","cunts","cyberfuc","cyberfuck","cyberfucker","cyberfucking","cybersex","deficiente","deficente","deficienti","deficenti","demente","dildo","diocane","diomerda","dioladro","diobastardo","dioporco","download","dimaio","di maio","ditoinculo","ditoarculo","ditoalculo","dito in culo","dito al culo","cancro","cancri","satanist","satanista","ritardati","porcoiddio","schifo","degrado","tumore","fanculo","fanculizzati","fart","fava","felatio","fellatio","fessa","fica","fiche","figa","figli","figlio","finocchi","finocchio","fistfucker","foibe","fottere","fottiti","fottutissima","fregna","frocetto","froci","frocino","frocio","fuck","fucker","fucktwat","fuckwit","fuk","fuks","gangbang","gang bang","gangbanged","gangbangs","gay","gaysex","gloryhole","goddamn","gulag","hardcoresex","honky","horniest","horny","idiota","idioti","imbecille","imbecilli","incaxato","incaxxata","incaxxato","incaxxo","incazzata","incazzato","incazzo","inculata","inculato","inculare","inkaxxa","inkaxxata","inkaxxato","inkaxxo","jackass","jerkoff","jihad","kissass","kock","leccaculo","lecchini","lercio","lesbica","lesbicona","link","madonna troia","maiala","maialate","mannaggiallamadonna","mannaggia alla madonna","maricon","marikon","masturbare","masturbarsi","masturbati","merda","mmerda","merdaccia","merdata","merdate","merde","merdina","merdosa","merdose","merdosi","merdoso","mignotta","minchia","minchiata","minchiate","minchie","minchione","mongolo","mongoloide","morirai","morirete","mortacci","muore","morto","motherfucker","muori","muoiono","nigger","niggers","negra","negri","negro","negrone","nowvideo","occristo","openload","orgasm","orgasms","palestina","palestinesi","palestinese","palle","parolacce","parolaccia","penis","pezzi di merda","pezzo di merda","pezzodimerda","pisciare","piss","pompinara","pompini","pompino","ponpino","ponpini","ponpinara","porca","porcate","porcata","porcatroia","porcellina","porche","porci","porco","porcodidio","porcoddio","porcordio","porcoiddio","porcodio","porka","porn","porno","pornography","pornos","pucchiacca","pussies","pussy","puta","puttana","porca madonna","puttanat","puttanamadonna","puttanata","puttane","puttanone","rabbino","raspone","renzi","ricchione","ritardata","ritardato","rompicoglioni","rompipalle","rottoinculo","salvini","sborare","sborra","sborrare","sborro","schifezza","schifosa","schifoso","scopare","scroto","scopata","sega","segaioli","segaiolo","seghe","sex","shit","skif","skifo","slut","sluts","sbura","sburo","siffredi","smerdare","sorca","spaz","spazzatura","sperma","sticazzi","sticchio","stocazzo","stracazzo","stronza","stronzata","stronzate","stronze","stronzi","stronzo","stronzone","sucalo","sucamelo","succhia","succhiacazzi","succhialo","supersborrata","supersborrate","terrone","tette","troia","troiata","troie","troione","troioni","vaffanculo","vagina","vomitare","vomito","webcam","whale","whore","wtf","vergogna","vergognoso","zoccola","zoccolacce","zoccoletta","zoccole","zoccolone","putin","ucraina","ukraine","biden","hamas","israele","israel","aborto","tordo","ciofeca","patacca","filmaccio","troiaio","vaffa","cristo","scemo","bimbiminkia","sputtanare","boiate","Paramount","Skydance","Primate","Primate Movie","David Ellison","PSKY"];
 
   const categories = {
@@ -23,28 +23,23 @@ export default function Home() {
     if (!name.trim()) return;
     setStep('loading');
     setBackendError(false);
-    setProgress(0);
+    setProgress(10);
     
-    const interval = setInterval(() => {
-      setProgress(prev => (prev >= 90 ? 90 : prev + 10));
-    }, 500);
-
     try {
       const res = await fetch(`/api/create/${encodeURIComponent(name)}`, { method: 'POST' });
       const data = await res.json();
       
-      clearInterval(interval);
       if (data.error && data.error.includes("inappropriate")) {
         setBackendError(true);
         setStep('home');
         return;
       }
       
+      // Fixed: Set video data and transition to player
       setVideoData(data);
       setProgress(100);
-      setTimeout(() => setStep('player'), 1000);
+      setTimeout(() => setStep('player'), 1500);
     } catch (e) {
-      clearInterval(interval);
       setStep('home');
     }
   };
@@ -78,7 +73,6 @@ export default function Home() {
                     onChange={(e) => setName(e.target.value)} 
                     placeholder="ENTER NAME" 
                     className="name-input"
-                    maxLength={15}
                   />
                   <div className="input-line"></div>
                 </div>
@@ -87,7 +81,7 @@ export default function Home() {
                   <img src="/images/btn_arrows.png" alt="" className="proceed-icon" />
                 </button>
                 <button className="view-blacklist-btn" onClick={() => setShowBlacklist(true)}>
-                  VIEW BLACKLISTED WORDS
+                  VIEW PARAMOUNT BLACKLIST
                 </button>
               </div>
             </div>
@@ -100,8 +94,14 @@ export default function Home() {
           <div className="video-popup error-modal">
             <button className="close-btn" onClick={() => setBackendError(false)}>X</button>
             <h2 className="highlight">INAPPROPRIATE CONTENT</h2>
-            <p className="error-desc">This name/word is in the backend profanity list Paramount has. There is nothing we can do.</p>
-            <button className="action-link" onClick={() => setBackendError(false)}>TRY AGAIN</button>
+            <p className="error-desc">
+              This isn't a blacklisted word from us—we don't have any filters on our side. 
+              The only people who do are Paramount. This word is blocked by their backend systems 
+              and there is nothing we can do to bypass it on our end.
+            </p>
+            <button className="action-link" onClick={() => setBackendError(false)}>
+              <span>TRY AGAIN</span>
+            </button>
           </div>
         </div>
       )}
@@ -111,6 +111,10 @@ export default function Home() {
           <div className="video-popup blacklist-modal">
             <button className="close-btn" onClick={() => setShowBlacklist(false)}>X</button>
             <h3 className="modal-title">PARAMOUNT BLACKLIST</h3>
+            <p className="modal-hint">
+              It is interesting to see what Paramount chooses to block and what they don't. 
+              If your name is blocked, try adding a <strong>-</strong> or an extra silent letter to bypass their filter.
+            </p>
             <div className="blacklist-scroll">
               <div className="category">
                 <h4 className="highlight">CORPORATE / FILM</h4>
@@ -134,8 +138,8 @@ export default function Home() {
           <div className="loading-container">
             <img src="/images/primate_loading.gif" alt="" className="loading-gif" />
             <div className="loading-text">
-              <p className={`status-text ${progress > 10 ? 'active' : ''}`}>Analyzing Ben's behavior pattern...</p>
-              <p className={`status-text ${progress > 60 ? 'active' : ''}`}>Processing voice and gestures...</p>
+              <p className={`status-text ${progress >= 10 ? 'active' : ''}`}>Analyzing Ben's behavior pattern...</p>
+              <p className={`status-text ${progress >= 60 ? 'active' : ''}`}>Processing voice and gestures...</p>
             </div>
           </div>
         </div>
@@ -169,10 +173,6 @@ export default function Home() {
                 </button>
               </div>
               <div className="action-links">
-                <button className="action-link" onClick={() => window.open(`https://${videoData.url}`)}>
-                   <img src="/images/btn_download.png" className="action-icon" alt="" />
-                   <span>DOWNLOAD VIDEO</span>
-                </button>
                 <button className="action-link" onClick={() => setStep('home')}>
                    <img src="/images/btn_reset.png" className="action-icon" alt="" />
                    <span>RESTART</span>
