@@ -19,6 +19,22 @@ export default function Home() {
     general: ga.filter(w => !["putin", "ucraina", "ukraine", "biden", "hamas", "israele", "israel", "salvini", "comunista", "comunismo", "paramount", "skydance", "primate", "david ellison", "psky"].includes(w.toLowerCase()))
   };
 
+  const pollJob = async (jobId: string, initialData: any) => {
+    let attempts = 0;
+    while (attempts < 40) { // Polling logic from source
+      const res = await fetch(`/api/getJob/${jobId}`);
+      const data = await res.json();
+      if (data.status === "complete") {
+        return { ...initialData, url: data.url };
+      }
+      if (data.status === "error") throw new Error(data.error);
+      await new Promise(r => setTimeout(r, 750));
+      attempts++;
+      setProgress(prev => Math.min(prev + 2, 99));
+    }
+    throw new Error("Timeout");
+  };
+
   const startGeneration = async () => {
     if (!name.trim()) return;
     setStep('loading');
@@ -35,10 +51,16 @@ export default function Home() {
         return;
       }
       
-      // Fixed: Set video data and transition to player
-      setVideoData(data);
+      let finalData;
+      if (data.cached) {
+        finalData = data;
+      } else {
+        finalData = await pollJob(data.jobId, data); // Fixed: Poll and merge initial URLs
+      }
+      
+      setVideoData(finalData);
       setProgress(100);
-      setTimeout(() => setStep('player'), 1500);
+      setTimeout(() => setStep('player'), 1000);
     } catch (e) {
       setStep('home');
     }
