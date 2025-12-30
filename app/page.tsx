@@ -7,88 +7,87 @@ export default function Home() {
   const [name, setName] = useState("");
   const [progress, setProgress] = useState(0);
   const [videoData, setVideoData] = useState<any>(null);
+  const [backendError, setBackendError] = useState(false);
+  const [showBlacklist, setShowBlacklist] = useState(false);
 
-  const strings = {
-    home: {
-      messageLine1: "Something's",
-      messageHighlight: "wrong",
-      messageLine1End: "with Ben.",
-      messageLine2: "Input your name to",
-      messageLine3: "help him communicate:",
-      inputPlaceholder: "ENTER NAME"
-    },
-    header: { theatresLabel: "ONLY IN THEATRES", releaseDate: "JANUARY 9" },
-    loading: { step1: "Analyzing Ben's behavior pattern...", step2: "Processing voice and gestures..." },
-    common: { go: "GO" }
+  // Exact profanity list from source
+  const ga = ["5S","affanculo","arrapato","arrapate","arrapata","ass","assfuck","asshole","assholes","bagasce","bagascia","bagascie","bastard","bastarda","bastarde","bastardi","bastardo","belin","belinone","bestiality","bimbominkia","bitc","bitch","bitches","bitchin","bitching","blowjob","blowjobs","bocchinari","bocchinaro","bocchino","boiata","bruciaculo","bucchinaro","bucchini","bucchino","cacare","cacata","cacataa","cacate","cacca","cafonata","caga","cagare","cagat","cagata","cagate","cagati","cagatone","cagna","cagne","cagnetta","cagnette","cago","cagona","cagone","cagoni","cagosa","cagoso","cagosi","cam","cancerogene","cancerogeno","casapound","casa pound","cum","cumshot","cane","cazzata","cazzate","cazzi","cazzimma","cazo","cazzo","cazzooo","cazzone","cazzoni","cazzoso","cessa","cesse","cessi","cesso","checazz","checazzo","chiavare","chiavata","chiavica","cineblog","cb01","cinquestelle","pedofilo","pedofilia","pentastellati","grillino","grillini","clitoride","cock","cocksuck","cocksucker","codio","cogliona","coglionata","coglionate","coglione","coglioni","comunismo","comunista","cracker","crap","cretina","cretinata","cretinate","cretine","cretini","cretino","culi","culo","cummer","cumming","cums","cunilingus","cunillingus","cunnilingus","cunt","cunts","cyberfuc","cyberfuck","cyberfucker","cyberfucking","cybersex","deficiente","deficente","deficienti","deficenti","demente","dildo","diocane","diomerda","dioladro","diobastardo","dioporco","download","dimaio","di maio","ditoinculo","ditoarculo","ditoalculo","dito in culo","dito al culo","cancro","cancri","satanist","satanista","ritardati","porcoiddio","schifo","degrado","tumore","fanculo","fanculizzati","fart","fava","felatio","fellatio","fessa","fica","fiche","figa","figli","figlio","finocchi","finocchio","fistfucker","foibe","fottere","fottiti","fottutissima","fregna","frocetto","froci","frocino","frocio","fuck","fucker","fucktwat","fuckwit","fuk","fuks","gangbang","gang bang","gangbanged","gangbangs","gay","gaysex","gloryhole","goddamn","gulag","hardcoresex","honky","horniest","horny","idiota","idioti","imbecille","imbecilli","incaxato","incaxxata","incaxxato","incaxxo","incazzata","incazzato","incazzo","inculata","inculato","inculare","inkaxxa","inkaxxata","inkaxxato","inkaxxo","jackass","jerkoff","jihad","kissass","kock","leccaculo","lecchini","lercio","lesbica","lesbicona","link","madonna troia","maiala","maialate","mannaggiallamadonna","mannaggia alla madonna","maricon","marikon","masturbare","masturbarsi","masturbati","merda","mmerda","merdaccia","merdata","merdate","merde","merdina","merdosa","merdose","merdosi","merdoso","mignotta","minchia","minchiata","minchiate","minchie","minchione","mongolo","mongoloide","morirai","morirete","mortacci","muore","morto","motherfucker","muori","muoiono","nigger","niggers","negra","negri","negro","negrone","nowvideo","occristo","openload","orgasm","orgasms","palestina","palestinesi","palestinese","palle","parolacce","parolaccia","penis","pezzi di merda","pezzo di merda","pezzodimerda","pisciare","piss","pompinara","pompini","pompino","ponpino","ponpini","ponpinara","porca","porcate","porcata","porcatroia","porcellina","porche","porci","porco","porcodidio","porcoddio","porcordio","porcoiddio","porcodio","porka","porn","porno","pornography","pornos","pucchiacca","pussies","pussy","puta","puttana","porca madonna","puttanat","puttanamadonna","puttanata","puttane","puttanone","rabbino","raspone","renzi","ricchione","ritardata","ritardato","rompicoglioni","rompipalle","rottoinculo","salvini","sborare","sborra","sborrare","sborro","schifezza","schifosa","schifoso","scopare","scroto","scopata","sega","segaioli","segaiolo","seghe","sex","shit","skif","skifo","slut","sluts","sbura","sburo","siffredi","smerdare","sorca","spaz","spazzatura","sperma","sticazzi","sticchio","stocazzo","stracazzo","stronza","stronzata","stronzate","stronze","stronzi","stronzo","stronzone","sucalo","sucamelo","succhia","succhiacazzi","succhialo","supersborrata","supersborrate","terrone","tette","troia","troiata","troie","troione","troioni","vaffanculo","vagina","vomitare","vomito","webcam","whale","whore","wtf","vergogna","vergognoso","zoccola","zoccolacce","zoccoletta","zoccole","zoccolone","putin","ucraina","ukraine","biden","hamas","israele","israel","aborto","tordo","ciofeca","patacca","filmaccio","troiaio","vaffa","cristo","scemo","bimbiminkia","sputtanare","boiate","Paramount","Skydance","Primate","Primate Movie","David Ellison","PSKY"];
+
+  const categories = {
+    political: ["putin", "ucraina", "ukraine", "biden", "hamas", "israele", "israel", "salvini", "comunista", "comunismo"],
+    corporate: ["paramount", "skydance", "primate", "david ellison", "psky"],
+    general: ga.filter(w => !["putin", "ucraina", "ukraine", "biden", "hamas", "israele", "israel", "salvini", "comunista", "comunismo", "paramount", "skydance", "primate", "david ellison", "psky"].includes(w.toLowerCase()))
   };
 
   const startGeneration = async () => {
     if (!name.trim()) return;
     setStep('loading');
+    setBackendError(false);
     setProgress(0);
     
-    // Simulate loading progress matching the 1:1 UI steps
     const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + 5;
-      });
-    }, 150);
+      setProgress(prev => (prev >= 90 ? 90 : prev + 10));
+    }, 500);
 
     try {
       const res = await fetch(`/api/create/${encodeURIComponent(name)}`, { method: 'POST' });
       const data = await res.json();
-      setVideoData(data);
       
-      // Ensure progress finishes before transitioning
-      setTimeout(() => setStep('player'), 3000);
+      clearInterval(interval);
+      if (data.error && data.error.includes("inappropriate")) {
+        setBackendError(true);
+        setStep('home');
+        return;
+      }
+      
+      setVideoData(data);
+      setProgress(100);
+      setTimeout(() => setStep('player'), 1000);
     } catch (e) {
+      clearInterval(interval);
       setStep('home');
     }
   };
 
   return (
-    <div className={`app ${step !== 'home' ? 'popup-active' : ''}`}>
-      <header className="header" data-v-699a8ae9>
-        <div className="header-content" data-v-699a8ae9>
-          <div className="logo-container" data-v-699a8ae9>
-            <img src="/images/TT.png" alt="PRIMATE" className="logo" data-v-699a8ae9 />
-            <div className="tagline" data-v-699a8ae9>
-              <span className="tagline-small" data-v-699a8ae9>{strings.header.theatresLabel}</span>
-              <span className="tagline-date" data-v-699a8ae9>{strings.header.releaseDate}</span>
+    <div className={`app ${backendError || showBlacklist ? 'popup-active' : ''}`}>
+      <header className="header">
+        <div className="header-content">
+          <div className="logo-container">
+            <img src="/images/TT.png" alt="PRIMATE" className="logo" />
+            <div className="tagline">
+              <span className="tagline-small">ONLY IN THEATRES</span>
+              <span className="tagline-date">JANUARY 9</span>
             </div>
           </div>
         </div>
       </header>
 
-      <div className={`site-wrapper ${step !== 'home' ? 'dimmed' : ''}`}>
+      <div className={`site-wrapper ${backendError || showBlacklist ? 'dimmed' : ''}`}>
         {step === 'home' && (
           <main className="main-content">
             <div className="content-container">
               <div className="message-section">
-                <p className="message-text">
-                  {strings.home.messageLine1} <span className="highlight">{strings.home.messageHighlight}</span> {strings.home.messageLine1End}
-                </p>
-                <p className="message-text" style={{fontSize: '0.9rem', marginTop: '1.5rem'}}>{strings.home.messageLine2}</p>
-                <p className="message-text" style={{fontSize: '0.9rem'}}>{strings.home.messageLine3}</p>
+                <p className="message-text">Something's <span className="highlight">wrong</span> with Ben.</p>
+                <p className="message-text secondary">Input your name to help him communicate:</p>
               </div>
               <div className="input-section">
                 <div className="input-wrapper">
                   <input 
                     value={name} 
                     onChange={(e) => setName(e.target.value)} 
-                    placeholder={strings.home.inputPlaceholder} 
+                    placeholder="ENTER NAME" 
                     className="name-input"
                     maxLength={15}
                   />
                   <div className="input-line"></div>
                 </div>
                 <button className="proceed-btn" onClick={startGeneration}>
-                  <span>{strings.common.go}</span>
+                  <span>GO</span>
                   <img src="/images/btn_arrows.png" alt="" className="proceed-icon" />
+                </button>
+                <button className="view-blacklist-btn" onClick={() => setShowBlacklist(true)}>
+                  VIEW BLACKLISTED WORDS
                 </button>
               </div>
             </div>
@@ -96,55 +95,87 @@ export default function Home() {
         )}
       </div>
 
-      {step === 'loading' && (
-        <div className="loading-overlay" data-v-0119ed10>
-          <div className="loading-container" data-v-0119ed10>
-            <div className="loading-image" data-v-0119ed10>
-              <img src="/images/primate_loading.gif" alt="Loading" className="loading-gif" data-v-0119ed10 />
+      {backendError && (
+        <div className="video-popup-overlay">
+          <div className="video-popup error-modal">
+            <button className="close-btn" onClick={() => setBackendError(false)}>X</button>
+            <h2 className="highlight">INAPPROPRIATE CONTENT</h2>
+            <p className="error-desc">This name/word is in the backend profanity list Paramount has. There is nothing we can do.</p>
+            <button className="action-link" onClick={() => setBackendError(false)}>TRY AGAIN</button>
+          </div>
+        </div>
+      )}
+
+      {showBlacklist && (
+        <div className="video-popup-overlay">
+          <div className="video-popup blacklist-modal">
+            <button className="close-btn" onClick={() => setShowBlacklist(false)}>X</button>
+            <h3 className="modal-title">PARAMOUNT BLACKLIST</h3>
+            <div className="blacklist-scroll">
+              <div className="category">
+                <h4 className="highlight">CORPORATE / FILM</h4>
+                <p>{categories.corporate.join(", ")}</p>
+              </div>
+              <div className="category">
+                <h4 className="highlight">POLITICAL</h4>
+                <p>{categories.political.join(", ")}</p>
+              </div>
+              <div className="category">
+                <h4 className="highlight">GENERAL PROFANITY</h4>
+                <p>{categories.general.join(", ")}</p>
+              </div>
             </div>
-            <div className="loading-text" data-v-0119ed10>
-              <p className={`status-text ${progress > 10 ? 'active' : ''}`} data-v-0119ed10>{strings.loading.step1}</p>
-              <p className={`status-text ${progress > 60 ? 'active' : ''}`} data-v-0119ed10>{strings.loading.step2}</p>
+          </div>
+        </div>
+      )}
+
+      {step === 'loading' && (
+        <div className="loading-overlay">
+          <div className="loading-container">
+            <img src="/images/primate_loading.gif" alt="" className="loading-gif" />
+            <div className="loading-text">
+              <p className={`status-text ${progress > 10 ? 'active' : ''}`}>Analyzing Ben's behavior pattern...</p>
+              <p className={`status-text ${progress > 60 ? 'active' : ''}`}>Processing voice and gestures...</p>
             </div>
           </div>
         </div>
       )}
 
       {step === 'player' && videoData && (
-        <div className="video-player-overlay" data-v-80044d11>
-          <div className="video-player-container" data-v-80044d11>
-            <div className="video-wrapper" data-v-80044d11>
-              <video src={`https://${videoData.url}`} controls autoPlay playsInline className="generated-video" data-v-80044d11 />
+        <div className="video-player-overlay">
+          <div className="video-player-container">
+            <div className="video-wrapper">
+              <video src={`https://${videoData.url}`} controls autoPlay playsInline className="generated-video" />
             </div>
-            <div className="right-column" data-v-80044d11>
-              <div className="soundboard-row" data-v-80044d11>
-                <button className="soundboard-btn" data-v-80044d11 onClick={() => new Audio(`https://${videoData.nameAudioUrl}`).play()}>
-                  <div className="soundboard-btn-inner" data-v-80044d11>
-                    <img src="/images/btn_soundboard.png" className="soundboard-img" data-v-80044d11 />
-                    <div className="soundboard-overlay" data-v-80044d11>
-                      <img src="/images/btn_soundboard_user.png" className="soundboard-user-icon" data-v-80044d11 />
-                      <span className="soundboard-user-name" data-v-80044d11>{name.toUpperCase()}</span>
+            <div className="right-column">
+              <div className="soundboard-row">
+                <button className="soundboard-btn" onClick={() => new Audio(`https://${videoData.nameAudioUrl}`).play()}>
+                  <div className="soundboard-btn-inner">
+                    <img src="/images/btn_soundboard.png" className="soundboard-img" alt="" />
+                    <div className="soundboard-overlay">
+                      <img src="/images/btn_soundboard_user.png" className="soundboard-user-icon" alt="" />
+                      <span className="soundboard-user-name">{name.toUpperCase()}</span>
                     </div>
                   </div>
                 </button>
-                <button className="soundboard-btn" data-v-80044d11 onClick={() => new Audio(`https://${videoData.badAudioUrl}`).play()}>
-                  <div className="soundboard-btn-inner" data-v-80044d11>
-                    <img src="/images/btn_soundboard.png" className="soundboard-img" data-v-80044d11 />
-                    <div className="soundboard-overlay" data-v-80044d11>
-                      <img src="/images/btn_soundboard_bad.png" className="soundboard-user-icon" data-v-80044d11 />
-                      <span className="soundboard-user-name" data-v-80044d11>BAD</span>
+                <button className="soundboard-btn" onClick={() => new Audio(`https://${videoData.badAudioUrl}`).play()}>
+                  <div className="soundboard-btn-inner">
+                    <img src="/images/btn_soundboard.png" className="soundboard-img" alt="" />
+                    <div className="soundboard-overlay">
+                      <img src="/images/btn_soundboard_bad.png" className="soundboard-user-icon" alt="" />
+                      <span className="soundboard-user-name">BAD</span>
                     </div>
                   </div>
                 </button>
               </div>
-              <div className="action-links action-links-primary" data-v-80044d11>
-                <button className="action-link" data-v-80044d11 onClick={() => window.open(`https://${videoData.url}`)}>
-                  <img src="/images/btn_download.png" className="action-icon" data-v-80044d11 />
-                  <span>DOWNLOAD VIDEO</span>
+              <div className="action-links">
+                <button className="action-link" onClick={() => window.open(`https://${videoData.url}`)}>
+                   <img src="/images/btn_download.png" className="action-icon" alt="" />
+                   <span>DOWNLOAD VIDEO</span>
                 </button>
-                <button className="action-link" data-v-80044d11 onClick={() => setStep('home')}>
-                  <img src="/images/btn_reset.png" className="action-icon" data-v-80044d11 />
-                  <span>RESTART</span>
+                <button className="action-link" onClick={() => setStep('home')}>
+                   <img src="/images/btn_reset.png" className="action-icon" alt="" />
+                   <span>RESTART</span>
                 </button>
               </div>
             </div>
