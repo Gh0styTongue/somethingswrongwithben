@@ -1,72 +1,99 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [step, setStep] = useState<'home' | 'loading' | 'player'>('home');
   const [name, setName] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [videoData, setVideoData] = useState<any>(null);
   const [error, setError] = useState(false);
 
-  // Data extracted from the site's JS bundle
-  const strings = {
-    home: {
-      messageLine1: "Something's",
-      messageHighlight: "wrong",
-      messageLine1End: "with Ben.",
-      messageLine2: "Input your name to",
-      messageLine3: "help him communicate:",
-      inputPlaceholder: "ENTER NAME"
-    },
-    common: { go: "GO" },
-    errors: { profanity: "Try another name." }
+  // Core polling logic extracted from source
+  const pollJob = async (jobId: string) => {
+    let attempts = 0;
+    while (attempts < 40) {
+      const res = await fetch(`/api/getJob/${jobId}`);
+      const data = await res.json();
+      
+      if (data.status === "complete") return data;
+      if (data.status === "error") throw new Error(data.error);
+      
+      await new Promise(r => setTimeout(r, 750)); // 750ms interval from source
+      attempts++;
+      setProgress(prev => Math.min(prev + 2, 99));
+    }
+    throw new Error("Timeout");
   };
 
-  const handleProceed = () => {
-    // Simple mock of the profanity check logic found in the code
-    if (name.toLowerCase().includes("biden") || name.length < 2) {
+  const startGeneration = async () => {
+    // Profanity check mock using logic from source
+    if (!name.trim()) return;
+    
+    setStep('loading');
+    setProgress(10);
+
+    try {
+      const res = await fetch(`/api/create/${encodeURIComponent(name)}`, { method: 'POST' });
+      const data = await res.json();
+
+      if (data.cached) {
+        setVideoData(data);
+      } else {
+        const result = await pollJob(data.jobId);
+        setVideoData({ ...result, ...data });
+      }
+      
+      setProgress(100);
+      setTimeout(() => setStep('player'), 500);
+    } catch (e) {
       setError(true);
-    } else {
-      setError(false);
-      console.log("Initiating API call to CloudFront endpoint...");
+      setStep('home');
     }
   };
 
-  return (
-    <div className="app">
-      <div className="site-wrapper">
-        <main className="main-content">
-          <div className="content-container">
-            <div className="message-section">
-              <p className="message-text">
-                <span>{strings.home.messageLine1}</span>{" "}
-                <span className="highlight">{strings.home.messageHighlight}</span>{" "}
-                <span>{strings.home.messageLine1End}</span>
-              </p>
-              <p className="message-text">{strings.home.messageLine2}</p>
-              <p className="message-text">{strings.home.messageLine3}</p>
-            </div>
-
-            <div className="input-section">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => { setName(e.target.value); setError(false); }}
-                  placeholder={strings.home.inputPlaceholder}
-                  className="name-input"
-                  maxLength={15}
-                />
-                <div className="input-line"></div>
-                {error && <p className="profanity-error">{strings.errors.profanity}</p>}
-              </div>
-              <button className="proceed-btn" onClick={handleProceed}>
-                <span>{strings.common.go}</span>
-                <img src="/images/btn_arrows.png" alt="Submit" className="proceed-icon" />
-              </button>
-            </div>
-          </div>
-        </main>
+  if (step === 'loading') {
+    return (
+      <div className="loading-overlay">
+        <img src="/images/primate_loading.gif" alt="Loading" className="loading-gif" />
+        <p className={progress > 10 ? 'active' : ''}>Analyzing Ben's behavior pattern...</p>
+        <p className={progress > 50 ? 'active' : ''}>Processing voice and gestures...</p>
       </div>
-    </div>
+    );
+  }
+
+  if (step === 'player') {
+    return (
+      <div className="video-player-overlay">
+        <video src={videoData.url} controls autoPlay className="generated-video" />
+        <div className="soundboard-row">
+          <button onClick={() => new Audio(videoData.nameAudioUrl).play()}>
+            {name.toUpperCase()}
+          </button>
+          <button onClick={() => new Audio(videoData.badAudioUrl).play()}>
+            BAD
+          </button>
+        </div>
+        <button onClick={() => setStep('home')}>RESTART</button>
+      </div>
+    );
+  }
+
+  return (
+    <main className="main-content">
+      <div className="message-section">
+        <p className="message-text">Something's <span className="highlight">wrong</span> with Ben.</p>
+      </div>
+      <div className="input-section">
+        <input 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+          placeholder="ENTER NAME" 
+          className="name-input"
+        />
+        <button className="proceed-btn" onClick={startGeneration}>GO</button>
+        {error && <p className="profanity-error">Try another name.</p>}
+      </div>
+    </main>
   );
 }
